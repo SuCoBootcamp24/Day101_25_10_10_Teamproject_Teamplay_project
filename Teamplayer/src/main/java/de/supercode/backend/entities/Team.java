@@ -23,7 +23,7 @@ public class Team {
     private int losses;
 
     @Column(nullable = false)
-    private int ownerId;
+    private long ownerId;
 
     @OneToMany(cascade = CascadeType.ALL)
     private Set<Player> players = new HashSet<>();

@@ -1,7 +1,7 @@
 package de.supercode.backend.services;
 
-import de.supercode.backend.dtos.UserDTO;
-import de.supercode.backend.dtos.UserRegDTO;
+import de.supercode.backend.dtos.user.UserDTO;
+import de.supercode.backend.entities.Team;
 import de.supercode.backend.entities.User;
 import de.supercode.backend.repositorys.UserRepository;
 import org.springframework.security.core.Authentication;
@@ -26,7 +26,23 @@ public class UserService {
 
     }
 
-    private User getUserByEmail(String email) {
+    public User getUserByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    public User findUserById(long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    public void setTeam(long id, Team team) {
+        User user = findUserById(id);
+        user.setTeam(team);
+        userRepository.save(user);
+    }
+
+    public void deleteTeam(long userId) {
+        User user = findUserById(userId);
+        user.setTeam(null);
+        userRepository.save(user);
     }
 }

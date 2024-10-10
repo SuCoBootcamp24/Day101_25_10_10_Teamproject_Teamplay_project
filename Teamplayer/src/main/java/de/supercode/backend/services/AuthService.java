@@ -1,7 +1,7 @@
 package de.supercode.backend.services;
 
-import de.supercode.backend.dtos.UserDTO;
-import de.supercode.backend.dtos.UserRegDTO;
+import de.supercode.backend.dtos.user.UserDTO;
+import de.supercode.backend.dtos.user.UserRegDTO;
 import de.supercode.backend.entities.User;
 import de.supercode.backend.repositorys.UserRepository;
 import org.springframework.security.core.Authentication;
@@ -16,6 +16,7 @@ public class AuthService {
     private PasswordEncoder passwordEncoder;
 
     private TokenService tokenService;
+
 
     public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, TokenService tokenService) {
         this.userRepository = userRepository;

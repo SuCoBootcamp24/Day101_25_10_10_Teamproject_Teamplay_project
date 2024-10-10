@@ -1,9 +1,10 @@
 package de.supercode.backend.controller;
 
-import de.supercode.backend.dtos.UserDTO;
-import de.supercode.backend.dtos.UserRegDTO;
+import de.supercode.backend.dtos.user.UserDTO;
+import de.supercode.backend.dtos.user.UserRegDTO;
 import de.supercode.backend.services.AuthService;
 import de.supercode.backend.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,7 +30,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public UserDTO register(@RequestBody UserRegDTO userRegDTO) {
+    public UserDTO register(@RequestBody @Valid UserRegDTO userRegDTO) {
         return authService.registerUser(userRegDTO);
     }
 

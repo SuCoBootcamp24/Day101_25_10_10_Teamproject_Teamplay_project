@@ -1,4 +1,4 @@
-package de.supercode.backend.dtos;
+package de.supercode.backend.dtos.user;
 
 import de.supercode.backend.entities.Team;
 

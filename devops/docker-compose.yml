@@ -3,7 +3,7 @@ services:
     image: postgres
     environment:
       - POSTGRES_PASSWORD=password
-      - POSTGRES_USER=figthers
+      - POSTGRES_USER=fighters
       - POSTGRES_DB=teamfight
     ports:
       - 5432:5432

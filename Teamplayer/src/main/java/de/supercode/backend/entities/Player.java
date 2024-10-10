@@ -18,7 +18,15 @@ public class Player {
     @NotBlank(message = "Player must have a name")
     private String name;
 
-    private int powerLevel;
+    private int powerlevel;
 
     private PlayerTypes playerType;
+
+    public Player() {
+    }
+
+    public Player(String name, String type) {
+        this.name = name;
+        this.playerType = PlayerTypes.valueOf(type);
+    }
 }
