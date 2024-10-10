@@ -39,7 +39,7 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(request -> request
-                        //.requestMatchers("*").permitAll()
+                        .requestMatchers("/api/v1/auth/register").permitAll()
                         .anyRequest().hasAnyAuthority("SCOPE_USER"))
                 .oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
