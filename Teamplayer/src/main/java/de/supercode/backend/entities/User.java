@@ -31,8 +31,12 @@ public class User implements UserDetails {
     @NotBlank
     private String password;
 
+    private int winRatio;
+
     @OneToOne
     private Team team;
+
+
 
 
     // ----------------
