@@ -1,0 +1,13 @@
+services:
+  bnbbackend:
+    depends_on:
+      - fightdb
+    build:
+      context: ../Teamplayer
+      platforms:
+        - "linux/arm64"
+        - "linux/amd64"
+    ports:
+      - 8080:8080
+    env_file:
+      - ../backend/.env.testing

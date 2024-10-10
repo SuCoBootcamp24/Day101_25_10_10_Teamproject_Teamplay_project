@@ -1,0 +1,9 @@
+services:
+  fightdb:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=figthers
+      - POSTGRES_DB=teamfight
+    ports:
+      - 5432:5432
