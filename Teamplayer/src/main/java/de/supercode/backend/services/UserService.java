@@ -14,8 +14,9 @@ public class UserService {
 
     AuthService authService;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, AuthService authService) {
         this.userRepository = userRepository;
+        this.authService = authService;
     }
 
     public UserDTO getUserDetailsByLogin(Authentication authentication) {

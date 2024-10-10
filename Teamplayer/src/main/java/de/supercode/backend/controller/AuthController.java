@@ -23,7 +23,7 @@ public class AuthController {
         this.userService = userService;
     }
 
-    @PostMapping("Signin")
+    @PostMapping("/signin")
     public UserDTO login(Authentication authentication) {
         return userService.getUserDetailsByLogin(authentication);
     }
