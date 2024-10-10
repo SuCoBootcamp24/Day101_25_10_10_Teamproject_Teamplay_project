@@ -17,6 +17,11 @@ public class AuthService {
 
     private TokenService tokenService;
 
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, TokenService tokenService) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.tokenService = tokenService;
+    }
 
     public UserDTO registerUser(UserRegDTO newUserDTO) {
         User newUser = new User();
