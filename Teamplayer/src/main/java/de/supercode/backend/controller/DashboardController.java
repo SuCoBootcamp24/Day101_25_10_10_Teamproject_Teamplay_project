@@ -1,6 +1,7 @@
 package de.supercode.backend.controller;
 
 
+import de.supercode.backend.dtos.enemies.EnemyListDTO;
 import de.supercode.backend.dtos.team.TeamCreateRequestDTO;
 import de.supercode.backend.dtos.team.TeamResponseDTO;
 import de.supercode.backend.dtos.user.UserDashDTO;
@@ -9,6 +10,8 @@ import de.supercode.backend.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -29,6 +32,8 @@ public class DashboardController {
         return userService.getUserDashboard(authentication);
     }
 
+
+    //----------- TEAM ---------
     @PostMapping("/team")
     public TeamResponseDTO createNewTeam(@RequestBody @Valid TeamCreateRequestDTO dto, Authentication authentication) {
         return teamService.createTeam(dto, authentication);

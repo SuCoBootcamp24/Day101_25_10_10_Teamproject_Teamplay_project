@@ -31,7 +31,10 @@ public class User implements UserDetails {
     @NotBlank
     private String password;
 
-    private int winRatio;
+    private int wins;
+
+    private int losses;
+
 
     @OneToOne
     private Team team;

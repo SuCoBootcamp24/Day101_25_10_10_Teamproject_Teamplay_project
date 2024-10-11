@@ -1,5 +1,6 @@
 package de.supercode.backend.services;
 
+import de.supercode.backend.dtos.team.TeamResponseDTO;
 import de.supercode.backend.dtos.token.TokenDTO;
 import de.supercode.backend.dtos.user.UserDTO;
 import de.supercode.backend.dtos.user.UserDashDTO;
@@ -10,6 +11,8 @@ import de.supercode.backend.mapper.TeamMapper;
 import de.supercode.backend.repositorys.UserRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserService {
@@ -54,6 +57,15 @@ public class UserService {
 
     public UserDashDTO getUserDashboard(Authentication authentication) {
         User user = userRepository.findByEmail(authentication.getName()).orElseThrow(() -> new RuntimeException("User not found"));
-        return new UserDashDTO(user.getId(), user.getName(), user.getWinRatio(), teamMapper.toDTO(user.getTeam()));
+        int totalRatio = 0;
+        if (user.getWins() > 0 || user.getLosses() > 0) {
+            totalRatio = user.getWins() / (user.getWins() + user.getLosses()) * 100;
+        }
+        if (user.getTeam() != null) return new UserDashDTO(user.getId(), user.getName(), totalRatio, teamMapper.toDTO(user.getTeam()));
+        else return new UserDashDTO(user.getId(), user.getName(), totalRatio, null);
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 }
