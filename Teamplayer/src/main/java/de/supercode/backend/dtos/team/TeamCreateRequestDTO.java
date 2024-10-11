@@ -1,9 +1,7 @@
 package de.supercode.backend.dtos.team;
 
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.hibernate.validator.constraints.Range;
 
 public record TeamCreateRequestDTO(
         @NotNull
@@ -13,28 +11,28 @@ public record TeamCreateRequestDTO(
         String teamName,
 
         @NotBlank
-        String Player1Name,
+        String player1Name,
 
-        String Player1Type,
-
-        @NotBlank
-        String Player2Name,
-
-        String Player2Type,
+        String player1Type,
 
         @NotBlank
-        String Player3Name,
+        String player2Name,
 
-        String Player3Type,
-
-        @NotBlank
-        String Player4Name,
-
-        String Player4Type,
+        String player2Type,
 
         @NotBlank
-        String Player5Name,
+        String player3Name,
 
-        String Player5Type
+        String player3Type,
+
+        @NotBlank
+        String player4Name,
+
+        String player4Type,
+
+        @NotBlank
+        String player5Name,
+
+        String player5Type
         ) {
 }

@@ -22,11 +22,11 @@ public class PlayerService {
 
     public Set<Player> creatNewPlayerSet(TeamCreateRequestDTO dto) {
         Set<Player> players = new HashSet<>();
-        players.add(createNewPlayer(dto.Player1Name(), dto.Player1Type()));
-        players.add(createNewPlayer(dto.Player2Name(), dto.Player2Type()));
-        players.add(createNewPlayer(dto.Player3Name(), dto.Player3Type()));
-        players.add(createNewPlayer(dto.Player4Name(), dto.Player4Type()));
-        players.add(createNewPlayer(dto.Player5Name(), dto.Player5Type()));
+        players.add(createNewPlayer(dto.player1Name(), dto.player1Type()));
+        players.add(createNewPlayer(dto.player2Name(), dto.player2Type()));
+        players.add(createNewPlayer(dto.player3Name(), dto.player3Type()));
+        players.add(createNewPlayer(dto.player4Name(), dto.player4Type()));
+        players.add(createNewPlayer(dto.player5Name(), dto.player5Type()));
         return players;
     }
 
