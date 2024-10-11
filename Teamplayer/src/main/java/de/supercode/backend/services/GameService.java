@@ -6,7 +6,6 @@ import de.supercode.backend.entities.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.lang.runtime.SwitchBootstraps;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -98,13 +97,7 @@ public class GameService {
         if (enemies.isEmpty()) return false;
         User enemy = enemies.get(new Random().nextInt(enemies.size()));
 
-        switch (choice) {
-            case 0: //system 1
-                    break;
-            case 1: //system 2
-                    break;
-            default: throw new RuntimeException("Unknown choice (fightsystem)");
-        }
+        fightSystemChoicer(choice, initUser, enemy);
 
         return true; //// must change
     }
@@ -114,6 +107,11 @@ public class GameService {
         User initUser = userService.getUserByEmail(authentication.getName());
         User enemy = userService.getUserByName(enemyName);
 
+        fightSystemChoicer(choice, initUser, enemy);
+        return true;
+    }
+
+    private static void fightSystemChoicer(int choice, User initUser, User enemy) {
         switch (choice) {
             case 0: //system 1
                 break;
@@ -121,7 +119,8 @@ public class GameService {
                 break;
             default: throw new RuntimeException("Unknown choice (fightsystem)");
         }
-
-        return true;
     }
+
+
+
 }
