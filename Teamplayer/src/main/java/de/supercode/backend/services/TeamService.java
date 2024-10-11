@@ -2,7 +2,7 @@ package de.supercode.backend.services;
 
 import de.supercode.backend.dtos.player.PlayerListResponseDTO;
 import de.supercode.backend.dtos.team.TeamCreateRequestDTO;
-import de.supercode.backend.dtos.team.TeamCreateResponseDTO;
+import de.supercode.backend.dtos.team.TeamResponseDTO;
 import de.supercode.backend.entities.Team;
 import de.supercode.backend.entities.User;
 import de.supercode.backend.mapper.PlayerMapper;
@@ -29,7 +29,7 @@ public class TeamService {
         this.playerMapper = playerMapper;
     }
 
-    public TeamCreateResponseDTO createTeam(TeamCreateRequestDTO dto, Authentication authentication) {
+    public TeamResponseDTO createTeam(TeamCreateRequestDTO dto, Authentication authentication) {
         User initUser = userService.getUserByEmail(authentication.getName());
         User user = userService.findUserById(dto.userId());
 
@@ -50,7 +50,7 @@ public class TeamService {
 
         userService.setTeam(user.getId(), team);
 
-        return new TeamCreateResponseDTO(
+        return new TeamResponseDTO(
                 team.getName(),
                 team.getPlayers().stream()
                         .map(player -> { return new PlayerListResponseDTO(

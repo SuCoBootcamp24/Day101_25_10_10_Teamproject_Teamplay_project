@@ -2,15 +2,13 @@ package de.supercode.backend.controller;
 
 
 import de.supercode.backend.dtos.team.TeamCreateRequestDTO;
-import de.supercode.backend.dtos.team.TeamCreateResponseDTO;
+import de.supercode.backend.dtos.team.TeamResponseDTO;
+import de.supercode.backend.dtos.user.UserDashDTO;
 import de.supercode.backend.services.TeamService;
 import de.supercode.backend.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -26,9 +24,19 @@ public class DashboardController {
         this.teamService = teamService;
     }
 
+    @GetMapping
+    public UserDashDTO getUserDashboard(Authentication authentication) {
+        return userService.getUserDashboard(authentication);
+    }
+
     @PostMapping("/team")
-    public TeamCreateResponseDTO createNewTeam(@RequestBody @Valid TeamCreateRequestDTO dto, Authentication authentication) {
+    public TeamResponseDTO createNewTeam(@RequestBody @Valid TeamCreateRequestDTO dto, Authentication authentication) {
         return teamService.createTeam(dto, authentication);
+    }
+
+    @DeleteMapping("/team")
+    public void deleteTeam(Authentication authentication) {
+        userService.deleteTeam(userService.getUserByEmail(authentication.getName()).getId());
     }
 
 

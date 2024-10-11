@@ -1,5 +1,6 @@
 package de.supercode.backend.controller;
 
+import de.supercode.backend.dtos.token.TokenDTO;
 import de.supercode.backend.dtos.user.UserDTO;
 import de.supercode.backend.dtos.user.UserRegDTO;
 import de.supercode.backend.services.AuthService;
@@ -25,8 +26,8 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    public UserDTO login(Authentication authentication) {
-        return userService.getUserDetailsByLogin(authentication);
+    public TokenDTO login(Authentication authentication) {
+        return userService.getTokenByLogin(authentication);
     }
 
     @PostMapping("/register")
