@@ -107,6 +107,21 @@ public class GameService {
         }
 
         return true; //// must change
+    }
 
+
+    public boolean fightWithEnemy(int choice, String enemyName, Authentication authentication) {
+        User initUser = userService.getUserByEmail(authentication.getName());
+        User enemy = userService.getUserByName(enemyName);
+
+        switch (choice) {
+            case 0: //system 1
+                break;
+            case 1: //system 2
+                break;
+            default: throw new RuntimeException("Unknown choice (fightsystem)");
+        }
+
+        return true;
     }
 }
