@@ -15,9 +15,11 @@ public class GameService {
 
     UserService userService;
 
+    FightSystemService fightSystemService;
 
-    public GameService(UserService userService) {
+    public GameService(UserService userService, FightSystemService fightSystemService) {
         this.userService = userService;
+        this.fightSystemService = fightSystemService;
     }
 
     public List<User> getEnemyUsers(Authentication authentication) {
@@ -97,9 +99,7 @@ public class GameService {
         if (enemies.isEmpty()) return false;
         User enemy = enemies.get(new Random().nextInt(enemies.size()));
 
-        fightSystemChoicer(choice, initUser, enemy);
-
-        return true; //// must change
+        return fightSystemChoicer(choice, initUser, enemy);
     }
 
 
@@ -107,18 +107,16 @@ public class GameService {
         User initUser = userService.getUserByEmail(authentication.getName());
         User enemy = userService.getUserByName(enemyName);
 
-        fightSystemChoicer(choice, initUser, enemy);
-        return true;
+        return fightSystemChoicer(choice, initUser, enemy);
     }
 
-    private static void fightSystemChoicer(int choice, User initUser, User enemy) {
+    private boolean fightSystemChoicer(int choice, User initUser, User enemy) {
         switch (choice) {
-            case 0: //system 1
-                break;
-            case 1: //system 2
-                break;
-            default: throw new RuntimeException("Unknown choice (fightsystem)");
+            case 0: return fightSystemService.standardFightSystem(initUser, enemy);
+            case 1: break;//system 2
+            default: throw new RuntimeException("Unknown choice (Fightsystem)");
         }
+        return false;
     }
 
 

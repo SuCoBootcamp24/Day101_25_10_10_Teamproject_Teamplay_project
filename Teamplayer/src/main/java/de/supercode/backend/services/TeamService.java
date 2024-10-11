@@ -62,4 +62,16 @@ public class TeamService {
                         .collect(Collectors.toList())
         );
     }
+
+    public void setWins(long teamId) {
+        Team team = teamRepository.findById(teamId).orElseThrow(() -> new RuntimeException("Team not found"));
+        team.setWins(team.getWins() + 1);
+        teamRepository.save(team);
+    }
+
+    public void setlosses(long teamId) {
+        Team team = teamRepository.findById(teamId).orElseThrow(() -> new RuntimeException("Team not found"));
+        team.setLosses(team.getLosses() + 1);
+        teamRepository.save(team);
+    }
 }

@@ -72,4 +72,16 @@ public class UserService {
     public User getUserByName(String name) {
         return userRepository.findByName(name).orElseThrow(() -> new RuntimeException("User not found"));
     }
+
+    public void setWins(long userid) {
+        User user = findUserById(userid);
+        user.setWins(user.getWins() + 1);
+        userRepository.save(user);
+    }
+
+    public void setLosses(long userId) {
+        User user = findUserById(userId);
+        user.setLosses(user.getLosses() + 1);
+        userRepository.save(user);
+    }
 }
