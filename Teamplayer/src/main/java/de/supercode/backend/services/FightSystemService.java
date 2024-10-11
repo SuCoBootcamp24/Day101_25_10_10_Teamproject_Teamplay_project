@@ -25,9 +25,9 @@ public class FightSystemService {
         List<Player> teamUser = new ArrayList<>(initUser.getTeam().getPlayers());
         List<Player> teamEnemy = new ArrayList<>(enemy.getTeam().getPlayers());
 
-        boolean isDraw = true;
 
-        while (isDraw) {
+
+        while (true) {
             int userWins = 0;
             int enemyWins = 0;
 
@@ -51,7 +51,6 @@ public class FightSystemService {
                 teamService.setWins(initUser.getTeam().getId());
                 userService.setLosses(enemy.getId());
                 teamService.setlosses(enemy.getTeam().getId());
-                isDraw = false;
                 return true;
 
             } else if (userWins < enemyWins) {
@@ -59,14 +58,10 @@ public class FightSystemService {
                 teamService.setWins(enemy.getTeam().getId());
                 userService.setLosses(initUser.getId());
                 teamService.setlosses(enemy.getTeam().getId());
-                isDraw = false;
                 return false;
 
-            } else {
-                isDraw = true;
             }
         }
-        return false; // if draw
     }
 
     public boolean experimentalFightSystem(User initUser, User enemy){
@@ -105,10 +100,16 @@ public class FightSystemService {
             boolean enemyTeamAlive = teamEnemy.stream().anyMatch(player -> player.getPowerlevel() > 0);
 
             if (!userTeamAlive) {
-                // Enemy wins
+                userService.setWins(enemy.getId());
+                teamService.setWins(enemy.getTeam().getId());
+                userService.setLosses(initUser.getId());
+                teamService.setlosses(enemy.getTeam().getId());
                 return false;
             } else if (!enemyTeamAlive) {
-                // User wins
+                userService.setWins(initUser.getId());
+                teamService.setWins(initUser.getTeam().getId());
+                userService.setLosses(enemy.getId());
+                teamService.setlosses(enemy.getTeam().getId());
                 return true;
             }
         }
