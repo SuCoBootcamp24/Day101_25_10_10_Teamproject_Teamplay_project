@@ -21,6 +21,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(unique = true)
     @NotBlank(message = "user must have a username")
     private String name;
 
