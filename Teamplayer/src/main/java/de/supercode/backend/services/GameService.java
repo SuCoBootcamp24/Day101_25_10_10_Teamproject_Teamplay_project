@@ -113,7 +113,7 @@ public class GameService {
     private boolean fightSystemChoicer(int choice, User initUser, User enemy) {
         switch (choice) {
             case 0: return fightSystemService.standardFightSystem(initUser, enemy);
-            case 1: break;//system 2
+            case 1: fightSystemService.experimentalFightSystem(initUser, enemy); break;//system 2
             default: throw new RuntimeException("Unknown choice (Fightsystem)");
         }
         return false;
