@@ -35,17 +35,17 @@ public class GameService {
     public List<EnemyListDTO> convertToEnemyDTOs(List<User> enemies) {
         return enemies.stream()
                 .map(user -> {
-                    Team team = user.getTeam();
-
+                    Team team = user.getTeam();;
                     int teamRatio = 0;
                     if (team.getWins() > 0 || team.getLosses() > 0) {
-                        teamRatio = team.getWins() / (team.getWins() + team.getLosses()) * 100;
+                        teamRatio = (int) (((double) team.getWins() / (team.getWins() + team.getLosses())) * 100);
                     }
 
                     int totalRatio = 0;
                     if (user.getWins() > 0 || user.getLosses() > 0) {
-                        totalRatio = user.getWins() / (user.getWins() + user.getLosses()) * 100;
+                        totalRatio = (int) (((double) user.getWins() / (user.getWins() + user.getLosses())) * 100);
                     }
+
 
                     return new EnemyListDTO(
                             team.getName(),
@@ -61,36 +61,6 @@ public class GameService {
         return convertToEnemyDTOs(getEnemyUsers(authentication));
     }
 
-
-
-//    public List<EnemyListDTO> getEnemies(Authentication authentication) {
-//        User initUser = userService.getUserByEmail(authentication.getName());
-//        List<User> allUsers = userService.getAllUsers();
-//        return allUsers.stream()
-//                .filter(user -> user.getId() != initUser.getId())
-//                .filter(user -> user.getTeam() != null)
-//                .map(user -> {
-//                    Team team = user.getTeam();
-//
-//                    int teamRatio = 0;
-//                    if (team.getWins() > 0 || team.getLosses() > 0) {
-//                        teamRatio = team.getWins() / (team.getWins() + team.getLosses()) * 100;
-//                    }
-//
-//                    int totalRatio = 0;
-//                    if (user.getWins() > 0 || user.getLosses() > 0) {
-//                        totalRatio = user.getWins() / (user.getWins() + user.getLosses()) * 100;
-//                    }
-//
-//                    return new EnemyListDTO(
-//                            team.getName(),
-//                            teamRatio,
-//                            user.getName(),
-//                            totalRatio
-//                            );
-//                })
-//                .collect(Collectors.toList());
-//    }
 
     public boolean randomFightChoice(int choice, Authentication authentication) {
         User initUser = userService.getUserByEmail(authentication.getName());
@@ -113,10 +83,9 @@ public class GameService {
     private boolean fightSystemChoicer(int choice, User initUser, User enemy) {
         switch (choice) {
             case 0: return fightSystemService.standardFightSystem(initUser, enemy);
-            case 1: fightSystemService.experimentalFightSystem(initUser, enemy); break;//system 2
+            case 1: return fightSystemService.experimentalFightSystem(initUser, enemy);
             default: throw new RuntimeException("Unknown choice (Fightsystem)");
         }
-        return false;
     }
 
 

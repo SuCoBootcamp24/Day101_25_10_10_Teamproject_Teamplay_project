@@ -29,4 +29,11 @@ public class Player {
         this.name = name;
         this.playerType = PlayerTypes.valueOf(type);
     }
+
+    public Player(long id, String name, int powerlevel, PlayerTypes playerType) {
+        this.id = id;
+        this.name = name;
+        this.powerlevel = powerlevel;
+        this.playerType = playerType;
+    }
 }
