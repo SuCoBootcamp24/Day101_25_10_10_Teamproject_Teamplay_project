@@ -9,6 +9,8 @@ public record UserDashDTO(
         String name,
         int winRatio,
 
-        TeamResponseDTO teamDTO
+        TeamResponseDTO teamDTO,
+
+        int teamRation
 ) {
 }

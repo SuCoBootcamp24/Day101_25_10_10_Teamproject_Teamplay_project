@@ -59,10 +59,18 @@ public class UserService {
         User user = userRepository.findByEmail(authentication.getName()).orElseThrow(() -> new RuntimeException("User not found"));
         int totalRatio = 0;
         if (user.getWins() > 0 || user.getLosses() > 0) {
-            totalRatio = user.getWins() / (user.getWins() + user.getLosses()) * 100;
+            totalRatio = (int) (((double) user.getWins() / (user.getWins() + user.getLosses())) * 100);
         }
-        if (user.getTeam() != null) return new UserDashDTO(user.getId(), user.getName(), totalRatio, teamMapper.toDTO(user.getTeam()));
-        else return new UserDashDTO(user.getId(), user.getName(), totalRatio, null);
+        if (user.getTeam() != null) {
+            Team team = user.getTeam();;
+            int teamRatio = 0;
+            if (team.getWins() > 0 || team.getLosses() > 0) {
+                teamRatio = (int) (((double) team.getWins() / (team.getWins() + team.getLosses())) * 100);
+            }
+            return new UserDashDTO(user.getId(), user.getName(), totalRatio, teamMapper.toDTO(team), teamRatio);
+        }
+        else return new UserDashDTO(user.getId(), user.getName(), totalRatio, null, 0);
+
     }
 
     public List<User> getAllUsers() {
