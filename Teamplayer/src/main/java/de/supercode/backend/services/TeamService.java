@@ -9,6 +9,7 @@ import de.supercode.backend.mapper.PlayerMapper;
 import de.supercode.backend.repositorys.TeamRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Collectors;
 
@@ -29,6 +30,7 @@ public class TeamService {
         this.playerMapper = playerMapper;
     }
 
+    @Transactional
     public TeamResponseDTO createTeam(TeamCreateRequestDTO dto, Authentication authentication) {
         User initUser = userService.getUserByEmail(authentication.getName());
         User user = userService.findUserById(dto.userId());

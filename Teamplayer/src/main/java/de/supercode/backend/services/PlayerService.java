@@ -7,13 +7,21 @@ import de.supercode.backend.repositorys.PlayerRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class PlayerService {
 
     PlayerRepository playerRepository;
+
+    private final int MAX_ROOKIES = 1;
+    private final int MAX_NORMALS = 2;
+    private final int MAX_VETERANS = 1;
+    private final int MAX_LEGENDARYS = 1;
+
 
     public PlayerService(PlayerRepository playerRepository) {
         this.playerRepository = playerRepository;
@@ -27,6 +35,19 @@ public class PlayerService {
         players.add(createNewPlayer(dto.player3Name(), dto.player3Type()));
         players.add(createNewPlayer(dto.player4Name(), dto.player4Type()));
         players.add(createNewPlayer(dto.player5Name(), dto.player5Type()));
+
+        // Überprüfe die Anzahl der Spielertypen
+        Map<PlayerTypes, Long> typeCounts = players.stream()
+                .collect(Collectors.groupingBy(Player::getPlayerType, Collectors.counting()));
+
+        // Bedingungen überprüfen
+        if (typeCounts.getOrDefault(PlayerTypes.ROOKIE, 0L) != MAX_ROOKIES ||
+                typeCounts.getOrDefault(PlayerTypes.NORMAL, 0L) != MAX_NORMALS ||
+                typeCounts.getOrDefault(PlayerTypes.VETERAN, 0L) != MAX_VETERANS ||
+                typeCounts.getOrDefault(PlayerTypes.LEGENDARY, 0L) != MAX_LEGENDARYS) {
+            throw new IllegalArgumentException("Ungültige Teamzusammenstellung: Es muss 1 Rookie, 2 Normal, 1 Veteran und 1 Legendär geben.");
+        }
+
         return players;
     }
 
