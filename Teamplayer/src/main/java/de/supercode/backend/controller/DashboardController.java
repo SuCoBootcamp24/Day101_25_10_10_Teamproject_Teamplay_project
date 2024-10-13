@@ -41,6 +41,7 @@ public class DashboardController {
 
     @DeleteMapping("/team")
     public void deleteTeam(Authentication authentication) {
+        System.out.println("jeep");
         userService.deleteTeam(userService.getUserByEmail(authentication.getName()).getId());
     }
 

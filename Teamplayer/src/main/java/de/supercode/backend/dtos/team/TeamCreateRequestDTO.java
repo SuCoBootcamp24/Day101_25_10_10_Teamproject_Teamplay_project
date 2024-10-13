@@ -4,8 +4,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record TeamCreateRequestDTO(
-        @NotNull
-        long userId,
 
         @NotBlank
         String teamName,

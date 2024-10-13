@@ -67,6 +67,7 @@ public class UserService {
             if (team.getWins() > 0 || team.getLosses() > 0) {
                 teamRatio = (int) (((double) team.getWins() / (team.getWins() + team.getLosses())) * 100);
             }
+            System.out.println(user.getName() + ": " + totalRatio + "% " + teamRatio + "%");
             return new UserDashDTO(user.getId(), user.getName(), totalRatio, teamMapper.toDTO(team), teamRatio);
         }
         else return new UserDashDTO(user.getId(), user.getName(), totalRatio, null, 0);

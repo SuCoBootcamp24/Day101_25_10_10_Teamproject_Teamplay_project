@@ -32,10 +32,7 @@ public class TeamService {
 
     @Transactional
     public TeamResponseDTO createTeam(TeamCreateRequestDTO dto, Authentication authentication) {
-        User initUser = userService.getUserByEmail(authentication.getName());
-        User user = userService.findUserById(dto.userId());
-
-        if (user == null || user.getId() != initUser.getId()) throw new RuntimeException(" your can't create a team for other User");
+        User user = userService.getUserByEmail(authentication.getName());
 
         if (user.getTeam() != null) {
             Team oldTeam = user.getTeam();
