@@ -15,7 +15,10 @@ import java.util.stream.Collectors;
 @Service
 public class PlayerService {
 
-    PlayerRepository playerRepository;
+    private PlayerRepository playerRepository;
+
+    private final Random random = new Random();
+
 
     private final int MAX_ROOKIES = 1;
     private final int MAX_NORMALS = 2;
@@ -58,7 +61,6 @@ public class PlayerService {
     }
 
     private int randomPowerlevel(PlayerTypes type) {
-        Random random = new Random();
-        return random.nextInt((type.getMaxRange() - type.getMinRange()) + 1) + type.getMinRange();
+        return random.nextInt(type.getMaxRange() - type.getMinRange() + 1) + type.getMinRange();
     }
 }

@@ -1,15 +1,13 @@
 package de.supercode.backend.services;
 
-import de.supercode.backend.dtos.team.TeamResponseDTO;
 import de.supercode.backend.dtos.token.TokenDTO;
-import de.supercode.backend.dtos.user.UserDTO;
 import de.supercode.backend.dtos.user.UserDashDTO;
 import de.supercode.backend.entities.Team;
 import de.supercode.backend.entities.User;
-import de.supercode.backend.mapper.PlayerMapper;
 import de.supercode.backend.mapper.TeamMapper;
 import de.supercode.backend.repositorys.UserRepository;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,11 +15,10 @@ import java.util.List;
 @Service
 public class UserService {
 
-    UserRepository userRepository;
+    private UserRepository userRepository;
+    private AuthService authService;
+    private TeamMapper teamMapper;
 
-    AuthService authService;
-
-    TeamMapper teamMapper;
 
     public UserService(UserRepository userRepository, AuthService authService, TeamMapper teamMapper) {
         this.userRepository = userRepository;
@@ -30,17 +27,19 @@ public class UserService {
     }
 
     public TokenDTO getTokenByLogin(Authentication authentication) {
-        User existUser = getUserByEmail(authentication.getName());
+        getUserByEmail(authentication.getName());
         String token = authService.getToken(authentication);
         return new TokenDTO(token);
     }
 
     public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("user with '" + email + "' not found."));
     }
 
     public User findUserById(long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("user with ID '" + userId + "' not found."));
     }
 
     public void setTeam(long id, Team team) {
@@ -56,22 +55,36 @@ public class UserService {
     }
 
     public UserDashDTO getUserDashboard(Authentication authentication) {
-        User user = userRepository.findByEmail(authentication.getName()).orElseThrow(() -> new RuntimeException("User not found"));
-        int totalRatio = 0;
-        if (user.getWins() > 0 || user.getLosses() > 0) {
-            totalRatio = (int) (((double) user.getWins() / (user.getWins() + user.getLosses())) * 100);
-        }
-        if (user.getTeam() != null) {
-            Team team = user.getTeam();;
-            int teamRatio = 0;
-            if (team.getWins() > 0 || team.getLosses() > 0) {
-                teamRatio = (int) (((double) team.getWins() / (team.getWins() + team.getLosses())) * 100);
-            }
-            System.out.println(user.getName() + ": " + totalRatio + "% " + teamRatio + "%");
-            return new UserDashDTO(user.getId(), user.getName(), totalRatio, teamMapper.toDTO(team), teamRatio);
-        }
-        else return new UserDashDTO(user.getId(), user.getName(), totalRatio, null, 0);
+        User user = getUserByEmail(authentication.getName());
+        int totalRatio = calculateRatio(user.getWins(), user.getLosses());
 
+        if (user.getTeam() != null) {
+            Team team = user.getTeam();
+            int teamRatio = calculateRatio(team.getWins(), team.getLosses());
+            return new UserDashDTO(
+                    user.getId(),
+                    user.getName(),
+                    totalRatio,
+                    teamMapper.toDTO(team),
+                    teamRatio
+            );
+        } else {
+            return new UserDashDTO(
+                    user.getId(),
+                    user.getName(),
+                    totalRatio,
+                    null,
+                    0
+            );
+        }
+    }
+
+    private int calculateRatio(int wins, int losses) {
+        int totalGames = wins + losses;
+        if (totalGames == 0) {
+            return 0;
+        }
+        return (int) (((double) wins / totalGames) * 100);
     }
 
     public List<User> getAllUsers() {
@@ -79,7 +92,8 @@ public class UserService {
     }
 
     public User getUserByName(String name) {
-        return userRepository.findByName(name).orElseThrow(() -> new RuntimeException("User not found"));
+        return userRepository.findByName(name)
+                .orElseThrow(() -> new UsernameNotFoundException("User with '" + name + "' not found."));
     }
 
     public void setWins(long userid) {

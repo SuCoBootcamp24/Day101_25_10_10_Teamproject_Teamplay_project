@@ -12,9 +12,7 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     private UserRepository userRepository;
-
     private PasswordEncoder passwordEncoder;
-
     private TokenService tokenService;
 
 

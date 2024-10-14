@@ -7,12 +7,3 @@ public record AnalyticDTO(
         List<AnalyticPartDTO> parts
 ) {
 }
-
-
-/*
-Rookie 1 -10
-Normal 11-30
-Veteran 31-50
-Legendär 51-80
-
- */
