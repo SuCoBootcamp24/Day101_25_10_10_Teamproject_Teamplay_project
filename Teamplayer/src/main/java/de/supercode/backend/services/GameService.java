@@ -1,6 +1,8 @@
 package de.supercode.backend.services;
 
 import de.supercode.backend.dtos.enemies.EnemyListDTO;
+import de.supercode.backend.dtos.fight.AnalyticDTO;
+import de.supercode.backend.dtos.fight.AnalyticPartDTO;
 import de.supercode.backend.entities.Team;
 import de.supercode.backend.entities.User;
 import org.springframework.security.core.Authentication;
@@ -62,25 +64,25 @@ public class GameService {
     }
 
 
-    public boolean randomFightChoice(int choice, Authentication authentication) {
+    public AnalyticDTO randomFightChoice(int choice, Authentication authentication) {
         User initUser = userService.getUserByEmail(authentication.getName());
         List<User> enemies = getEnemyUsers(authentication);
 
-        if (enemies.isEmpty()) return false;
+        if (enemies.isEmpty()) throw new IllegalStateException("No enemy");
         User enemy = enemies.get(new Random().nextInt(enemies.size()));
 
         return fightSystemChoicer(choice, initUser, enemy);
     }
 
 
-    public boolean fightWithEnemy(int choice, String enemyName, Authentication authentication) {
+    public AnalyticDTO fightWithEnemy(int choice, String enemyName, Authentication authentication) {
         User initUser = userService.getUserByEmail(authentication.getName());
         User enemy = userService.getUserByName(enemyName);
 
         return fightSystemChoicer(choice, initUser, enemy);
     }
 
-    private boolean fightSystemChoicer(int choice, User initUser, User enemy) {
+    private AnalyticDTO fightSystemChoicer(int choice, User initUser, User enemy) {
         switch (choice) {
             case 0: return fightSystemService.standardFightSystem(initUser, enemy);
             case 1: return fightSystemService.experimentalFightSystem(initUser, enemy);

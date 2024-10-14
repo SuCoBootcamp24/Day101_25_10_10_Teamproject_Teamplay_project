@@ -1,6 +1,7 @@
 package de.supercode.backend.controller;
 
 import de.supercode.backend.dtos.enemies.EnemyListDTO;
+import de.supercode.backend.dtos.fight.AnalyticDTO;
 import de.supercode.backend.services.GameService;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -26,12 +27,12 @@ public class GameController {
     //-----------Choice fight-----------
 
     @GetMapping("/fight/random/{choice}")
-    public boolean FightWithRandomEnemy(@PathVariable int choice, Authentication authentication) {
+    public AnalyticDTO FightWithRandomEnemy(@PathVariable int choice, Authentication authentication) {
         return gameService.randomFightChoice(choice, authentication);
     }
 
     @PostMapping("/fight/{choice}/{enemyName}")
-    public boolean FightWithEnemy(@PathVariable int choice, @PathVariable String enemyName, Authentication authentication) {
+    public AnalyticDTO FightWithEnemy(@PathVariable int choice, @PathVariable String enemyName, Authentication authentication) {
         return gameService.fightWithEnemy(choice, enemyName, authentication);
     }
 }

@@ -1,8 +1,11 @@
 package de.supercode.backend.services;
 
 
+import de.supercode.backend.dtos.fight.AnalyticDTO;
+import de.supercode.backend.dtos.fight.AnalyticPartDTO;
 import de.supercode.backend.entities.Player;
 import de.supercode.backend.entities.User;
+import de.supercode.backend.mapper.PlayerMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,35 +19,39 @@ public class FightSystemService {
     UserService userService;
 
     TeamService teamService;
+    PlayerMapper playerMapper;
 
-    public FightSystemService(UserService userService, TeamService teamService) {
+    public FightSystemService(UserService userService, TeamService teamService, PlayerMapper playerMapper) {
         this.userService = userService;
         this.teamService = teamService;
+        this.playerMapper = playerMapper;
     }
 
-    public boolean standardFightSystem(User initUser, User enemy) {
+    public AnalyticDTO standardFightSystem(User initUser, User enemy) {
+        List<AnalyticPartDTO> parts = new ArrayList<>();
         List<Player> teamUser = new ArrayList<>(initUser.getTeam().getPlayers());
         List<Player> teamEnemy = new ArrayList<>(enemy.getTeam().getPlayers());
 
-
-
         while (true) {
+            parts.clear();
             int userWins = 0;
             int enemyWins = 0;
 
             Collections.shuffle(teamUser);
-            System.out.println(teamUser);
             Collections.shuffle(teamEnemy);
-            System.out.println(teamEnemy);
 
             for (int i = 0; i < teamUser.size(); i++) {
                 Player playerUser = teamUser.get(i);
                 Player playerEnemy = teamEnemy.get(i);
 
                 if (playerUser.getPowerlevel() > playerEnemy.getPowerlevel()) {
+                    parts.add(new AnalyticPartDTO(playerMapper.toDTO(playerUser), playerMapper.toDTO(playerEnemy), false, true));
                     userWins++;
                 } else if (playerUser.getPowerlevel() < playerEnemy.getPowerlevel()) {
+                    parts.add(new AnalyticPartDTO(playerMapper.toDTO(playerUser), playerMapper.toDTO(playerEnemy), false, false));
                     enemyWins++;
+                } else {
+                    parts.add(new AnalyticPartDTO(playerMapper.toDTO(playerUser), playerMapper.toDTO(playerEnemy), true, false));
                 }
             }
             if (userWins > enemyWins) {
@@ -52,25 +59,25 @@ public class FightSystemService {
                 teamService.setWins(initUser.getTeam().getId());
                 userService.setLosses(enemy.getId());
                 teamService.setlosses(enemy.getTeam().getId());
-                return true;
+                return new AnalyticDTO(true, parts);
 
             } else if (userWins < enemyWins) {
                 userService.setWins(enemy.getId());
                 teamService.setWins(enemy.getTeam().getId());
                 userService.setLosses(initUser.getId());
-                teamService.setlosses(enemy.getTeam().getId());
-                return false;
+                teamService.setlosses(initUser.getTeam().getId());
+                return new AnalyticDTO(false, parts);
 
             }
         }
     }
 
-    public boolean experimentalFightSystem(User initUser, User enemy) {
-        List<String> analyses = new ArrayList<>();
+    public AnalyticDTO experimentalFightSystem(User initUser, User enemy) {
+        List<AnalyticPartDTO> parts = new ArrayList<>();
 
         while (true) {
 
-            analyses = new ArrayList<>();
+            parts.clear();
 
             List<Player> teamUser = new ArrayList<>();
             for (Player p : initUser.getTeam().getPlayers()) {
@@ -82,9 +89,7 @@ public class FightSystemService {
             }
 
             Collections.shuffle(teamUser);
-            System.out.println(teamUser);
             Collections.shuffle(teamEnemy);
-            System.out.println(teamEnemy);
 
             for (int teamUserPlayers = 0; teamUserPlayers < teamUser.size(); teamUserPlayers++) {
                 Player userPlayer = teamUser.get(teamUserPlayers);
@@ -93,62 +98,46 @@ public class FightSystemService {
                         Player enemyPlayer = teamEnemy.get(teamEnemyPlayers);
 
                         if (enemyPlayer.getPowerlevel() > 0) {
-
-                            if (userPlayer.getPowerlevel() == enemyPlayer.getPowerlevel()) {
-                                analyses.add(
-                                        "- " + enemyPlayer.getPowerlevel() +
-                                        " " + userPlayer.getName() + " " + userPlayer.getPowerlevel() +
-                                        " <-> " + enemyPlayer.getName() + " " + enemyPlayer.getPowerlevel() +
-                                        " - " + userPlayer.getPowerlevel());
-                                userPlayer.setPowerlevel(userPlayer.getPowerlevel() - enemyPlayer.getPowerlevel());
-                                enemyPlayer.setPowerlevel(0);
-                            }
+                            System.out.println("u " + userPlayer.getPowerlevel() + " E" + enemyPlayer.getPowerlevel());
 
                             if (userPlayer.getPowerlevel() > enemyPlayer.getPowerlevel()) {
-                                analyses.add(
-                                        "- " + enemyPlayer.getPowerlevel() +
-                                        " " + userPlayer.getName() + " " + userPlayer.getPowerlevel() +
-                                        " -> " + enemyPlayer.getName() + " " + enemyPlayer.getPowerlevel());
+                                parts.add(new AnalyticPartDTO(playerMapper.toDTO(userPlayer), playerMapper.toDTO(enemyPlayer), false, true));
                                 userPlayer.setPowerlevel(userPlayer.getPowerlevel() - enemyPlayer.getPowerlevel());
                                 enemyPlayer.setPowerlevel(0);
 
                             } else if (userPlayer.getPowerlevel() < enemyPlayer.getPowerlevel()) {
-                                analyses.add(
-                                        userPlayer.getName() + userPlayer.getPowerlevel() +
-                                        " <- " + enemyPlayer.getName() + " " + userPlayer.getPowerlevel() +
-                                        " - " + userPlayer.getPowerlevel());
+                                parts.add(new AnalyticPartDTO(playerMapper.toDTO(userPlayer), playerMapper.toDTO(enemyPlayer), false, false));
                                 enemyPlayer.setPowerlevel(enemyPlayer.getPowerlevel() - userPlayer.getPowerlevel());
                                 userPlayer.setPowerlevel(0);
-
+                                break;
+                            } else {
+                                parts.add(new AnalyticPartDTO(playerMapper.toDTO(userPlayer), playerMapper.toDTO(enemyPlayer), true, false));
+                                userPlayer.setPowerlevel(0);
+                                enemyPlayer.setPowerlevel(0);
                                 break;
                             }
+
                         }
                     }
                 }
             }
 
-            analyses.forEach(System.out::println);
-
-            // Check if either team has no players left with power
             boolean userTeamAlive = teamUser.stream().anyMatch(player -> player.getPowerlevel() > 0);
             boolean enemyTeamAlive = teamEnemy.stream().anyMatch(player -> player.getPowerlevel() > 0);
 
             if (!userTeamAlive) {
-                System.out.println("fight lose");
                 userService.setWins(enemy.getId());
                 teamService.setWins(enemy.getTeam().getId());
                 userService.setLosses(initUser.getId());
-                teamService.setlosses(enemy.getTeam().getId());
-                return false;
+                teamService.setlosses(initUser.getTeam().getId());
+                return new AnalyticDTO(false, parts);
             } else if (!enemyTeamAlive) {
-                System.out.println("fight win");
                 userService.setWins(initUser.getId());
                 teamService.setWins(initUser.getTeam().getId());
                 userService.setLosses(enemy.getId());
                 teamService.setlosses(enemy.getTeam().getId());
-                return true;
+                return new AnalyticDTO(true, parts);
             }
-            System.out.println("fight drawn");
         }
     }
 }
